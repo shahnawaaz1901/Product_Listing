@@ -1,4 +1,6 @@
 import app from "./index.js";
+import connectToDB from "./config/mongoose.js";
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, (e) => {
   if (e) {
@@ -6,4 +8,5 @@ app.listen(PORT, (e) => {
     return;
   }
   console.log(`Server is Up on Port : ${PORT} `);
+  connectToDB();
 });
