@@ -8,7 +8,6 @@ app.use(express.json());
 
 app.use("/api/products", productRouter);
 app.use((err, req, res, next) => {
-  console.log(err);
   if (err instanceof CustomError) {
     return res
       .status(err.responseCode)

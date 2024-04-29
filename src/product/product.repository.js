@@ -1,27 +1,36 @@
+//* Packages
 import mongoose from "mongoose";
+
+//* Internal Modules
 import ProductModel from "./product.model.js";
 import CustomError from "../error/error.class.js";
 
+//* Product Repository Class
 export default class ProductRepository {
-  async newProduct(newProduct) {
+  //* Add new Product to Database
+  async new(newProduct) {
     try {
-      const data = new ProductModel(newProduct);
-      await data.save();
+      const data = new ProductModel(newProduct); //* Create Instance
+      await data.save(); //* Save on Database
       return data;
     } catch (error) {
-      throw error;
+      throw error; //* Pass Error to Product Controller Catch
     }
   }
+
+  //* Get a Product From Database
   async get() {
     try {
-      return await ProductModel.find({});
+      return await ProductModel.find({}); //* Return the Products
     } catch (error) {
       throw error;
     }
   }
 
-  async deleteProduct(id) {
+  //* Delete a Product From Database
+  async delete(id) {
     try {
+      //* Delete a Product and Saved Return Value to data
       const data = await ProductModel.deleteOne({
         _id: new mongoose.Types.ObjectId(id),
       });
@@ -31,8 +40,12 @@ export default class ProductRepository {
     }
   }
 
+  //* Update a Product on Database
   async update(productData) {
     try {
+      /*
+        Use findOneAndUpdate so that updated Document is returned from Database
+      */
       const updatedData = await ProductModel.findOneAndUpdate(
         { _id: productData.id },
         {
@@ -40,11 +53,30 @@ export default class ProductRepository {
         },
         { returnDocument: "after" }
       );
+
+      //* If product Not found then throw Error
       if (!updatedData) {
         throw new CustomError(404, "Product Not found");
       }
       return updatedData;
     } catch (error) {
+      if (error instanceof mongoose.mongo.BSON.BSONError) {
+        throw new CustomError(406, error.message);
+      }
+      throw error;
+    }
+  }
+
+  //* Get a Single Product By Id from Database
+  async getOne(id) {
+    try {
+      return await ProductModel.findOne({
+        _id: new mongoose.Types.ObjectId(id),
+      });
+    } catch (error) {
+      if (error instanceof mongoose.mongo.BSON.BSONError) {
+        throw new CustomError(406, error.message);
+      }
       throw error;
     }
   }
