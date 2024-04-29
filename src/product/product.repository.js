@@ -36,6 +36,11 @@ export default class ProductRepository {
       });
       return data;
     } catch (error) {
+      /* 
+        When a User Enters the Incorrect id then Database thrown Error that id 
+        must be haxadecimal format so Error of that type is BSON Error that's 
+        why we check for BSON Error 
+      */
       if (error instanceof mongoose.mongo.BSON.BSONError) {
         throw new CustomError(406, error.message);
       }
