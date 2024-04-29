@@ -13,7 +13,7 @@ export default class ProductController {
   async getProducts(req, res, next) {
     try {
       const data = await this.productRepository.get();
-      res.status(200).json({ success: true, products: data });
+      res.status(200).json({ success: true, data: { products: data } });
     } catch (error) {
       next(error);
     }
@@ -30,7 +30,7 @@ export default class ProductController {
       if (!data) {
         throw new CustomError(404, "Product not found !!");
       }
-      res.status(200).json({ success: true, product: data });
+      res.status(200).json({ success: true, data: { product: data } });
     } catch (error) {
       next(error);
     }
@@ -55,7 +55,9 @@ export default class ProductController {
         name,
         quantity,
       });
-      return res.status(201).json({ success: true, product: newProduct });
+      return res
+        .status(201)
+        .json({ success: true, data: { product: newProduct } });
     } catch (error) {
       next(error);
     }
@@ -78,7 +80,9 @@ export default class ProductController {
         id,
         quantity,
       });
-      res.status(200).json({ success: true, product: updatedProduct });
+      res
+        .status(200)
+        .json({ success: true, data: { product: updatedProduct } });
     } catch (error) {
       next(error);
     }
