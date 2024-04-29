@@ -36,6 +36,9 @@ export default class ProductRepository {
       });
       return data;
     } catch (error) {
+      if (error instanceof mongoose.mongo.BSON.BSONError) {
+        throw new CustomError(406, error.message);
+      }
       throw error;
     }
   }
@@ -47,7 +50,7 @@ export default class ProductRepository {
         Use findOneAndUpdate so that updated Document is returned from Database
       */
       const updatedData = await ProductModel.findOneAndUpdate(
-        { _id: productData.id },
+        { _id: new mongoose.Types.ObjectId(productData.id) },
         {
           quantity: productData.quantity,
         },

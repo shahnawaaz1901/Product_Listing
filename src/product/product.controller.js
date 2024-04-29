@@ -44,6 +44,10 @@ export default class ProductController {
         throw new CustomError(406, "Name Must be Present");
       }
 
+      if (quantity == 0) {
+        throw new CustomError(406, "Quantity Must greater then 0");
+      }
+
       if (!quantity) {
         throw new CustomError(406, "Quantity Must be Present");
       }
